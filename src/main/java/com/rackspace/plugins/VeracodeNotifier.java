@@ -86,6 +86,22 @@ public class VeracodeNotifier extends Notifier {
         return includes;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getApplicationName() {
+        return applicationName;
+    }
+
+    public int getAddToBuildNumber() {
+        return addToBuildNumber;
+    }
+
     private List<File> convertFilePaths(FilePath[] filePaths){
         List<File> files = new ArrayList<File>();
 
