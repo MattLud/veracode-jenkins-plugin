@@ -41,6 +41,8 @@ public class BuildTriggers {
     }
 
     public boolean isTriggeredBy(Class<? extends Cause> cause) {
-        return causes.get(cause);
+        Boolean triggered = causes.get(cause);
+
+        return triggered!=null?triggered:false;
     }
 }
