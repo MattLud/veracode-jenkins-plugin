@@ -3,12 +3,14 @@ package com.rackspace.plugins;
 import com.rackspace.api.clients.veracode.DefaultVeracodeApiClient;
 import com.rackspace.api.clients.veracode.VeracodeApiClient;
 import com.rackspace.api.clients.veracode.VeracodeApiException;
+import com.rackspace.plugins.model.BuildTriggers;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.BuildListener;
+import hudson.model.Cause;
 import hudson.remoting.VirtualChannel;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
@@ -39,13 +41,17 @@ public class VeracodeNotifier extends Notifier {
     private final String applicationName;
     private final int addToBuildNumber;
 
+    private final BuildTriggers triggers;
+
     @DataBoundConstructor
-    public VeracodeNotifier(String includes, String username, String password, String applicationName, String addToBuildNumber) {
+    public VeracodeNotifier(String includes, String username, String password, String applicationName, String addToBuildNumber, BuildTriggers triggers) {
         this.includes = includes;
         this.username = username;
         this.password = password;
         this.applicationName = applicationName;
         this.addToBuildNumber = Integer.valueOf(addToBuildNumber);
+
+        this.triggers = triggers;
     }
 
     @Override
@@ -59,24 +65,14 @@ public class VeracodeNotifier extends Notifier {
 
     @Override
     public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
-        FilePath workspace = build.getWorkspace();
 
-        FilePath[] filesToScan = workspace.list(includes);
-        listener.getLogger().println("Uploading Files to Veracode: " + Arrays.toString(filesToScan));
-        listener.getLogger().println("Base URI" + getDescriptor().getEndpoint());
+        List<Cause> causes = build.getCauses();
 
-        VeracodeApiClient client = new DefaultVeracodeApiClient(getDescriptor().getEndpoint(), username, password, listener.getLogger());
-
-        String buildId = null;
-
-        try{
-            buildId = client.scanArtifacts(convertFilePaths(filesToScan), build.getNumber() + addToBuildNumber, applicationName);
-
-            listener.getLogger().println("Veracode Scan Succeeded. Build ID: " + buildId);
-        } catch(VeracodeApiException e){
-            throw new RuntimeException("Veracode Scan Failed", e);
-        } finally {
-            client.shutdown();
+        for (Cause cause : causes){
+            if(triggers.isTriggeredBy(cause.getClass())){
+                performScan(build, listener);
+                break;
+            }
         }
 
         return true;
@@ -100,6 +96,43 @@ public class VeracodeNotifier extends Notifier {
 
     public int getAddToBuildNumber() {
         return addToBuildNumber;
+    }
+
+    public boolean isOverrideTriggers(){
+        if(triggers != null){
+            return triggers.isTriggerManually() || triggers.isTriggerPeriodically() || triggers.isTriggerScm();
+        }
+        else{
+            return false;
+        }
+    }
+
+    public BuildTriggers getTriggers() {
+        return triggers;
+    }
+
+    private void performScan(AbstractBuild<?, ?> build, BuildListener listener) throws InterruptedException, IOException{
+        FilePath workspace = build.getWorkspace();
+
+        FilePath[] filesToScan = workspace.list(includes);
+        listener.getLogger().println("Uploading Files to Veracode: " + Arrays.toString(filesToScan));
+        listener.getLogger().println("Base URI" + getDescriptor().getEndpoint());
+
+        VeracodeApiClient client = new DefaultVeracodeApiClient(getDescriptor().getEndpoint(), username, password, listener.getLogger());
+
+        String buildId = null;
+
+        try{
+            buildId = client.scanArtifacts(convertFilePaths(filesToScan), build.getNumber() + addToBuildNumber, applicationName);
+
+            listener.getLogger().println("Veracode Scan Succeeded. Build ID: " + buildId);
+        } catch(VeracodeApiException e){
+            throw new RuntimeException("Veracode Scan Failed", e);
+        } finally {
+            client.shutdown();
+        }
+
+
     }
 
     private List<File> convertFilePaths(FilePath[] filePaths){

@@ -1,5 +1,6 @@
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
-  <f:entry title="Files to upload" field="includes" help="/plugin/veracode-hudson-plugin/help-includes.html">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout"
+         xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+    <f:entry title="Files to upload" field="includes" help="/plugin/veracode-hudson-plugin/help-includes.html">
         <f:textbox/>
     </f:entry>
     <f:entry title="Veracode Username" field="username">
@@ -12,9 +13,31 @@
         <f:textbox/>
     </f:entry>
     <f:advanced>
-        <f:entry title="Add to Hudson Build Numbers: " field="addToBuildNumber"
-                help="/plugin/veracode-hudson-plugin/help-AddToBuildNumbers.html">
+        <f:entry title="Add to Hudson Build Numbers" field="addToBuildNumber"
+                 help="/plugin/veracode-hudson-plugin/help-AddToBuildNumbers.html">
             <f:textbox default="0"/>
         </f:entry>
+        <f:optionalBlock title="Override Build Triggers" name="triggers" checked="${instance.isOverrideTriggers()}">
+            <f:section title="Triggers">
+                <!--<f:entry title="Build Periodically">-->
+                    <!--<f:checkbox checked="${instance.isTriggerPeriodically()}"/>-->
+                <!--</f:entry>-->
+                <!--<f:entry title="Poll SCM">-->
+                    <!--<f:checkbox checked="${instance.isTriggerSCM()}"/>-->
+                <!--</f:entry>-->
+                <!--<f:entry title="Manually Started">-->
+                    <!--<f:checkbox checked="${instance.isTriggerManually()}"/>-->
+                <!--</f:entry>-->
+                <f:entry title="Build Periodically" >
+                    <f:checkbox name="triggerPeriodically"  checked="${instance.getTriggers().isTriggerPeriodically()}"/>
+                </f:entry>
+                <f:entry title="Poll SCM" >
+                    <f:checkbox name="triggerScm" checked="${instance.getTriggers().isTriggerScm()}"/>
+                </f:entry>
+                <f:entry title="Manually Started">
+                    <f:checkbox name="triggerManually" checked="${instance.getTriggers().isTriggerManually()}"/>
+                </f:entry>
+            </f:section>
+        </f:optionalBlock>
     </f:advanced>
 </j:jelly>
