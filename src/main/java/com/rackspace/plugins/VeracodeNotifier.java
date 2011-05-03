@@ -116,7 +116,7 @@ public class VeracodeNotifier extends Notifier {
 
         FilePath[] filesToScan = workspace.list(includes);
         listener.getLogger().println("Uploading Files to Veracode: " + Arrays.toString(filesToScan));
-        listener.getLogger().println("Base URI" + getDescriptor().getEndpoint());
+        listener.getLogger().println("Base URI: " + getDescriptor().getEndpoint());
 
         VeracodeApiClient client = new DefaultVeracodeApiClient(getDescriptor().getEndpoint(), username, password, listener.getLogger());
 

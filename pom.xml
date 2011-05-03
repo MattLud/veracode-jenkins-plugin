@@ -88,7 +88,7 @@
         <dependency>
             <groupId>com.rackspace.api.clients</groupId>
             <artifactId>veracode-client</artifactId>
-            <version>1.0</version>
+            <version>1.1</version>
         </dependency>
     </dependencies>
 
