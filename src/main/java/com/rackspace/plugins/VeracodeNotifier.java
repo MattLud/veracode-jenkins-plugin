@@ -66,15 +66,18 @@ public class VeracodeNotifier extends Notifier {
     @Override
     public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
 
-        List<Cause> causes = build.getCauses();
+        if (triggers == null) {
+            performScan(build, listener);
+        } else {
+            List<Cause> causes = build.getCauses();
 
-        for (Cause cause : causes){
-            if(triggers.isTriggeredBy(cause.getClass())){
-                performScan(build, listener);
-                break;
+            for (Cause cause : causes) {
+                if (triggers.isTriggeredBy(cause.getClass())) {
+                    performScan(build, listener);
+                    break;
+                }
             }
         }
-
         return true;
     }
 
@@ -98,11 +101,10 @@ public class VeracodeNotifier extends Notifier {
         return addToBuildNumber;
     }
 
-    public boolean isOverrideTriggers(){
-        if(triggers != null){
+    public boolean isOverrideTriggers() {
+        if (triggers != null) {
             return triggers.isTriggerManually() || triggers.isTriggerPeriodically() || triggers.isTriggerScm();
-        }
-        else{
+        } else {
             return false;
         }
     }
@@ -111,7 +113,7 @@ public class VeracodeNotifier extends Notifier {
         return triggers;
     }
 
-    private void performScan(AbstractBuild<?, ?> build, BuildListener listener) throws InterruptedException, IOException{
+    private void performScan(AbstractBuild<?, ?> build, BuildListener listener) throws InterruptedException, IOException {
         FilePath workspace = build.getWorkspace();
 
         FilePath[] filesToScan = workspace.list(includes);
@@ -122,11 +124,11 @@ public class VeracodeNotifier extends Notifier {
 
         String buildId = null;
 
-        try{
+        try {
             buildId = client.scanArtifacts(convertFilePaths(filesToScan), build.getNumber() + addToBuildNumber, applicationName);
 
             listener.getLogger().println("Veracode Scan Succeeded. Build ID: " + buildId);
-        } catch(VeracodeApiException e){
+        } catch (VeracodeApiException e) {
             throw new RuntimeException("Veracode Scan Failed", e);
         } finally {
             client.shutdown();
@@ -135,10 +137,10 @@ public class VeracodeNotifier extends Notifier {
 
     }
 
-    private List<File> convertFilePaths(FilePath[] filePaths){
+    private List<File> convertFilePaths(FilePath[] filePaths) {
         List<File> files = new ArrayList<File>();
 
-        for(FilePath path : filePaths){
+        for (FilePath path : filePaths) {
             files.add(getFile(path));
         }
 
@@ -202,7 +204,7 @@ public class VeracodeNotifier extends Notifier {
             return endpoint;
         }
 
-        public String defaultEndpoint(){
+        public String defaultEndpoint() {
             return "https://analysiscenter.veracode.com/api/";
         }
     }
