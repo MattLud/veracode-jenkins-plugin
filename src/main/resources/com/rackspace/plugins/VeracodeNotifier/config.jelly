@@ -17,12 +17,15 @@
                  help="/plugin/veracode-hudson-plugin/help-AddToBuildNumbers.html">
             <f:textbox default="0"/>
         </f:entry>
+        <f:entry title="Application Platform" field="applicationPlatform">
+            <f:textbox default="Java"/>
+        </f:entry>
         <f:optionalBlock title="Override Build Triggers" name="triggers" checked="${instance.isOverrideTriggers()}">
             <f:section title="Triggers">
-                <f:entry title="Build Periodically" >
-                    <f:checkbox name="triggerPeriodically"  checked="${instance.getTriggers().isTriggerPeriodically()}"/>
+                <f:entry title="Build Periodically">
+                    <f:checkbox name="triggerPeriodically" checked="${instance.getTriggers().isTriggerPeriodically()}"/>
                 </f:entry>
-                <f:entry title="Poll SCM" >
+                <f:entry title="Poll SCM">
                     <f:checkbox name="triggerScm" checked="${instance.getTriggers().isTriggerScm()}"/>
                 </f:entry>
                 <f:entry title="Manually Started">

@@ -39,17 +39,19 @@ public class VeracodeNotifier extends Notifier {
     private final String username;
     private final String password;
     private final String applicationName;
+    private final String applicationPlatform;
     private final int addToBuildNumber;
 
     private final BuildTriggers triggers;
 
     @DataBoundConstructor
-    public VeracodeNotifier(String includes, String username, String password, String applicationName, String addToBuildNumber, BuildTriggers triggers) {
+    public VeracodeNotifier(String includes, String username, String password, String applicationName, String addToBuildNumber, String applicationPlatform, BuildTriggers triggers) {
         this.includes = includes;
         this.username = username;
         this.password = password;
         this.applicationName = applicationName;
         this.addToBuildNumber = Integer.valueOf(addToBuildNumber);
+        this.applicationPlatform = applicationPlatform;
 
         this.triggers = triggers;
     }
@@ -101,6 +103,10 @@ public class VeracodeNotifier extends Notifier {
         return addToBuildNumber;
     }
 
+    public String getApplicationPlatform() {
+        return applicationPlatform;
+    }
+
     public boolean isOverrideTriggers() {
         if (triggers != null) {
             return triggers.isTriggerManually() || triggers.isTriggerPeriodically() || triggers.isTriggerScm();
@@ -125,7 +131,7 @@ public class VeracodeNotifier extends Notifier {
         String buildId = null;
 
         try {
-            buildId = client.scanArtifacts(convertFilePaths(filesToScan), build.getNumber() + addToBuildNumber, applicationName);
+            buildId = client.scanArtifacts(convertFilePaths(filesToScan), build.getNumber() + addToBuildNumber, applicationName, applicationPlatform);
 
             listener.getLogger().println("Veracode Scan Succeeded. Build ID: " + buildId);
         } catch (VeracodeApiException e) {
