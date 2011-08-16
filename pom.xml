@@ -6,7 +6,6 @@
         <groupId>org.jvnet.hudson.plugins</groupId>
         <artifactId>hudson-plugin-parent</artifactId>
         <version>2.0.0</version>
-        <!-- which version of Hudson is this plugin built against? -->
     </parent>
 
     <groupId>com.rackspace.plugins</groupId>
@@ -17,55 +16,18 @@
 
     <name>Veracode Plugin</name>
 
+    <licenses>
+        <license>
+            <name>The MIT License (MIT)</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
     <scm>
-        <connection>scm:git|ssh://git@repoman.rackspace.com/veracode-hudson-plugin</connection>
-        <developerConnection>scm:git|ssh://git@repoman.rackspace.com/veracode-hudson-plugin</developerConnection>
+        <connection>scm:git|ssh://git@github.com/veracode-jenkins-plugin</connection>
+        <developerConnection>scm:git|ssh://git@github.com/veracode-jenkins-plugin</developerConnection>
     </scm>
-
-    <repositories>
-        <repository>
-            <releases>
-                <enabled>true</enabled>
-                <checksumPolicy>fail</checksumPolicy>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-                <checksumPolicy>fail</checksumPolicy>
-            </snapshots>
-            <id>radar-nexus-repo</id>
-            <name>RADAR Nexus Repository</name>
-            <url>http://dev-hudson1.sat.intensive.int:8071/nexus/content/groups/public</url>
-        </repository>
-    </repositories>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <releases>
-                <enabled>true</enabled>
-                <checksumPolicy>fail</checksumPolicy>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-                <checksumPolicy>fail</checksumPolicy>
-            </snapshots>
-            <id>radar-nexus-repo</id>
-            <name>RADAR Nexus Repository</name>
-            <url>http://dev-hudson1.sat.intensive.int:8071/nexus/content/groups/public</url>
-        </pluginRepository>
-    </pluginRepositories>
-
-    <distributionManagement>
-        <repository>
-            <id>radar-nexus-repo</id>
-            <name>Internal Releases</name>
-            <url>http://dev-hudson1.sat.intensive.int:8071/nexus/content/repositories/releases</url>
-        </repository>
-        <snapshotRepository>
-            <id>radar-nexus-snapshot-repo</id>
-            <name>Internal Snapshots</name>
-            <url>http://dev-hudson1.sat.intensive.int:8071/nexus/content/repositories/snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
 
     <profiles>
         <profile>
