@@ -167,11 +167,7 @@ public class VeracodeNotifier extends Notifier {
         File file;
 
         try {
-            file = path.act(new FilePath.FileCallable<File>() {
-                public File invoke(File f, VirtualChannel channel) {
-                    return f;
-                }
-            });
+            file = path.act(new FileGetter());
         } catch (IOException e) {
             throw new RuntimeException("Could not load the build artifact to send.", e);
         } catch (InterruptedException e) {
@@ -225,4 +221,9 @@ public class VeracodeNotifier extends Notifier {
         }
     }
 
+    private static class FileGetter implements FilePath.FileCallable<File> {
+        public File invoke(File f, VirtualChannel channel) {
+            return f;
+        }
+    }
 }
