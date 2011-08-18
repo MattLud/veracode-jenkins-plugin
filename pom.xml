@@ -26,8 +26,8 @@
 
     <scm>
         <url>https://github.com/rackspace/veracode-jenkins-plugin.git</url>
-        <connection>scm:git|ssh://git@github.com/veracode-jenkins-plugin</connection>
-        <developerConnection>scm:git|ssh://git@github.com/veracode-jenkins-plugin</developerConnection>
+        <connection>scm:git|ssh://git@github.com/rackspace/veracode-jenkins-plugin.git</connection>
+        <developerConnection>scm:git|ssh://git@github.com/rackspace/veracode-jenkins-plugin.git</developerConnection>
     </scm>
 
     <developers>
